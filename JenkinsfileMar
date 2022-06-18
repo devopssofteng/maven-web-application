@@ -1,7 +1,7 @@
 node{
     
     def mavenHome = tool name: "maven-3.8.4"
-    echo "Job name is: '${env.JOB_NAME}' " 
+    echo "Job name is: ${env.JOB_NAME}" 
     //properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')), pipelineTriggers([pollSCM('* * * * *')])])
     
     stage('CheckoutCode'){
