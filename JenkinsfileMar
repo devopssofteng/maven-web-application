@@ -28,6 +28,7 @@ node{ //by default, it uses master/built-in branch
     def mavenHome = tool name: "maven-3.8.4"    
 	
 	try{
+		sendNotifyBuild('STARTED')
 		stage('CheckoutCode'){
 		  git branch: 'development', credentialsId: 'a9ba0cdd-997e-4402-8c6d-75ede8bf5b0e', url: 'https://github.com/devopssofteng/maven-web-application.git'
 		}
