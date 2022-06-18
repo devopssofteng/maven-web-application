@@ -1,32 +1,46 @@
-node{
-    
-    def mavenHome = tool name: "maven-3.8.4"
-    echo "Job name is: ${env.JOB_NAME}" 
-    //properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')), pipelineTriggers([pollSCM('* * * * *')])])
-    
-    stage('CheckoutCode'){
-      git branch: 'development', credentialsId: 'a9ba0cdd-997e-4402-8c6d-75ede8bf5b0e', url: 'https://github.com/devopssofteng/maven-web-application.git'
-    }
-    
-    stage('Build'){
-      sh "${mavenHome}/bin/mvn clean package"
-    }
-    
-/*   
-	  stage('UploadArtifactsIntoNexus'){
-		  sh "${mavenHome}/bin/mvn deploy"
-	  }
+def sendNotifyBuild(String buildStatus = 'STARTED') {
+	// build status of null means successful
+	buildStatus =  buildStatus ?: 'SUCCESSFUL'
 
+	// Default values
+	def colorName = 'RED'
+	def colorCode = '#FF0000'
+	def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+	def summary = "${subject} (${env.BUILD_URL})"
+
+	// Override default values based on build status
+	if (buildStatus == 'STARTED') {
+		color = 'YELLOW'
+		colorCode = '#FFFF00'
+	} else if (buildStatus == 'SUCCESSFUL') {
+		color = 'GREEN'
+		colorCode = '#00FF00'
+	} else {
+		color = 'RED'
+		colorCode = '#FF0000'
+	}
+
+	// Send notifications
+	slackSend (color: colorCode, message: summary)
+}
+node{ //by default, it uses master/built-in branch
+    
+    def mavenHome = tool name: "maven-3.8.4"    
 	
-    stage('ExecuteSonarQubeReport'){
-      sh "${mavenHome}/bin/mvn sonar:sonar"
-    }
-    
-    stage('DeployAppIntoTomcatServer'){
-        sshagent(['0800c4b5-efca-4642-84d6-97d622bd1b5d']) {
-            sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.110.191.194:/opt/apache-tomcat-9.0.64/webapps"
-        }
-    }
-    
- */   
+	try{
+		stage('CheckoutCode'){
+		  git branch: 'development', credentialsId: 'a9ba0cdd-997e-4402-8c6d-75ede8bf5b0e', url: 'https://github.com/devopssofteng/maven-web-application.git'
+		}
+		
+		stage('Build'){
+		  sh "${mavenHome}/bin/mvn clean package"
+		}
+    }catch(e){
+		// If there was an exception thrown, the build failed
+		currentBuild.result = "FAILED"
+		throw e
+	}finally {
+		// Success or failure, always send notifications
+		sendNotifyBuild(currentBuild.result)
+	}
 }
