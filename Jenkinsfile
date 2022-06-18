@@ -1,8 +1,8 @@
 node{
     
-    def mavenHome = tool name: "maven-3.8.4"
+    //def mavenHome = tool name: "maven-3.8.4"
     
-    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')), pipelineTriggers([pollSCM('* * * * *')])])
+    //properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')), pipelineTriggers([pollSCM('* * * * *')])])
     
     stage('CheckoutCode'){
       git branch: 'development', credentialsId: 'a9ba0cdd-997e-4402-8c6d-75ede8bf5b0e', url: 'https://github.com/devopssofteng/maven-web-application.git'
