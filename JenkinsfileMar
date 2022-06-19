@@ -1,3 +1,4 @@
+/*
 def sendNotifyBuild(String buildStatus = 'STARTED') {
 	// build status of null means successful
 	buildStatus =  buildStatus ?: 'SUCCESSFUL'
@@ -23,12 +24,13 @@ def sendNotifyBuild(String buildStatus = 'STARTED') {
 	// Send notifications
 	slackSend (color: colorCode, message: summary, channel: 'congtonch')
 }
+*/
 node('congton-node-labels'){ //by default, it uses master/built-in branch
     
     def mavenHome = tool name: "maven-3.8.4"    
 	
 	try{
-		sendNotifyBuild('STARTED')
+		//sendNotifyBuild('STARTED')
 		stage('CheckoutCode'){
 		  git branch: 'development', credentialsId: 'a9ba0cdd-997e-4402-8c6d-75ede8bf5b0e', url: 'https://github.com/devopssofteng/maven-web-application.git'
 		}
@@ -42,6 +44,6 @@ node('congton-node-labels'){ //by default, it uses master/built-in branch
 		throw e
 	}finally {
 		// Success or failure, always send notifications
-		sendNotifyBuild(currentBuild.result)
+		//sendNotifyBuild(currentBuild.result)
 	}
 }
