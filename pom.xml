@@ -99,13 +99,13 @@
 	    <repository>
 	      <id>nexus</id>
 	      <name>Mithun Technologies Releases Nexus Repository</name>
-	      <url>http://65.2.83.21:8081/repository/congton-releases/</url>
+	      <url>http://13.235.87.155/repository/congton-releases/</url>
 	    </repository>
 	    
 	    <snapshotRepository>
 	      <id>nexus</id>
 	      <name>Mithun Technologies Snapshot Nexus Repository </name>
-	      <url>http://65.2.83.21:8081/repository/congton-snapshot/</url>
+	      <url>http://13.235.87.155/repository/congton-snapshot/</url>
 	    </snapshotRepository>
 	    
 	</distributionManagement>
