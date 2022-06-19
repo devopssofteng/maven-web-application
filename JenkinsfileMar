@@ -7,7 +7,7 @@ def sendNotifyBuild(String buildStatus = 'STARTED') {
 	def colorCode = '#FF0000'
 	def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
 	def summary = "${subject} (${env.BUILD_URL})"
-
+	
 	// Override default values based on build status
 	if (buildStatus == 'STARTED') {
 		color = 'YELLOW'
@@ -23,7 +23,7 @@ def sendNotifyBuild(String buildStatus = 'STARTED') {
 	// Send notifications
 	slackSend (color: colorCode, message: summary, channel: 'congtonch')
 }
-node{ //by default, it uses master/built-in branch
+node('congton-node-labels'){ //by default, it uses master/built-in branch
     
     def mavenHome = tool name: "maven-3.8.4"    
 	
